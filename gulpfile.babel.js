@@ -1,23 +1,31 @@
-// var gulp = require('gulp');
+import gulp from 'gulp';
+import yargs from 'yargs';
+import sass from 'gulp-sass';
+import cleanCss from 'gulp-clean-css';
+import gulpif from 'gulp-if';
+import sourcemaps from 'gulp-sourcemaps';
 
-// gulp.task('default', defaultTask);
+const PRODUCTION = yargs.argv.prod;
 
-// function defaultTask(done) {
-//     console.log('hey')
-//   //place code for your default task her
-//   done();
+// export const hello = (done) => {
+//     console.log(PRODUCTION);
+//     done();
 // }
 
-// gulp.task('hello', function(done) {
-//     console.log('hello');
-//     done();
-// })
-
-import gulp from 'gulp';
-
-export const hello = (done) => {
-    console.log('hello');
-    done();
+const paths = {
+	styles: {
+		src: ['src/assets/scss/bundle.scss'],
+		dest: 'dist/assets/css'
+	}
+}
+// gulp stream
+export const styles = (done) => {
+	return gulp.src(paths.styles.src)
+		.pipe(gulpif(!PRODUCTION, sourcemaps.init()))
+		.pipe(sass().on('error',sass.logError))
+		.pipe(gulpif(PRODUCTION, cleanCss({compatibility:'ie8'})))
+		.pipe(gulpif(!PRODUCTION, sourcemaps.write()))
+		.pipe(gulp.dest(paths.styles.dest));
 }
 
-export default hello;
+// export default hello;

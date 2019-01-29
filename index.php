@@ -8,27 +8,27 @@
             </a>
         </h2>
         <div>
-            <?php firsttheme_post_meta(); ?>
+            <?php secondtheme_post_meta(); ?>
         </div>
         <div>
             <?php the_excerpt(); ?>
         </diV>
-            <?php firsttheme_readmore_link(); ?> 
+            <?php secondtheme_readmore_link(); ?> 
     <?php } ?>
     <?php the_posts_pagination( ); ?>
 <?php } else { ?>
-    <p><?php esc_html_e('Sorry, no posts matched your criteria.', 'firsttheme'); ?></p>
+    <p><?php esc_html_e('Sorry, no posts matched your criteria.', 'secondtheme'); ?></p>
 <?php } ?>    
 
 <?php
 
 $city = 'london';
 
-echo esc_html__( 'Your city is', 'firsttheme' ) . $city;
+echo esc_html__( 'Your city is', 'secondtheme' ) . $city;
 
 printf(
     /* tanslators: %s is the city name */
-    esc_html__( 'Your city is %s', 'firsttheme' ),
+    esc_html__( 'Your city is %s', 'secondtheme' ),
     $city
 );
 

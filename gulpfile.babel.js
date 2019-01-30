@@ -21,19 +21,12 @@ export const reload = (done) => {
 	done();
 }
 
-// export const hello = (done) => {
-//     console.log(PRODUCTION);
-//     done();
-// }
-
 const paths = {
 	styles: {
 		src: ['src/assets/scss/bundle.scss','src/assets/scss/admin.scss'],
 		dest: 'dist/assets/css'
 	}
 }
-
-
 
 // gulp stream
 export const styles = (done) => {

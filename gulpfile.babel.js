@@ -4,39 +4,44 @@ import sass from 'gulp-sass';
 import cleanCss from 'gulp-clean-css';
 import gulpif from 'gulp-if';
 import sourcemaps from 'gulp-sourcemaps';
-import browserSync from 'browser-sync';
+import imagemin from 'gulp-imagemin';
+// import del from 'del';
+// import webpack from 'webpack-stream';
+// import uglify from 'gulp-uglify';
+// import named from 'vinyl-named';
+// import browserSync from 'browser-sync';
 
-const server = browserSync.create();
+// const server = browserSync.create();
 const PRODUCTION = yargs.argv.prod;
-
-export const serve = (done) => {
-	server.init({
-		proxy: "http://localhost"
-	});
-	done();
-}
-
-export const reload = (done) => {
-	server.reload();
-	done();
-}
 
 const paths = {
 	styles: {
 		src: ['src/assets/scss/bundle.scss','src/assets/scss/admin.scss'],
 		dest: 'dist/assets/css'
-	}
+	},
+	images: {
+		src: 'src/assets/images/**/*.{jpg,jpeg,png,svg,gif}',
+		dest: 'dist/assets/images'
+	},
+	other: {
+		src: ['src/assets/**/*','!src/assets/{images,js,scss}', '!src/assets/{images,js,scss}/**/*'],
+		dest: 'dist/assets'
+	},
 }
-
-// gulp stream
-export const styles = (done) => {
+export const styles = () => {
 	return gulp.src(paths.styles.src)
 		.pipe(gulpif(!PRODUCTION, sourcemaps.init()))
 		.pipe(sass().on('error',sass.logError))
 		.pipe(gulpif(PRODUCTION, cleanCss({compatibility:'ie8'})))
 		.pipe(gulpif(!PRODUCTION, sourcemaps.write()))
-		.pipe(gulp.dest(paths.styles.dest))
-		.pipe(server.stream());
+		.pipe(gulp.dest(paths.styles.dest));
+}
+
+
+export const images = () => {
+	return gulp.src(paths.images.src)
+		.pipe(gulpif(PRODUCTION, imagemin()))
+		.pipe(gulp.dest(paths.images.dest));
 }
 
 export const watch = () => {
@@ -47,5 +52,7 @@ export const watch = () => {
 	// gulp.watch(paths.other.src, gulp.series(copy, reload));
 } 
 
-export const dev = gulp.series( styles, serve, watch);
-// export default hello;
+export const copy = () => {
+	return gulp.src(paths.other.src)
+		.pipe(gulp.dest(paths.other.dest));
+}

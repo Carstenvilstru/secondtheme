@@ -5,7 +5,7 @@ import cleanCss from 'gulp-clean-css';
 import gulpif from 'gulp-if';
 import sourcemaps from 'gulp-sourcemaps';
 import imagemin from 'gulp-imagemin';
-// import del from 'del';
+import del from 'del';
 // import webpack from 'webpack-stream';
 // import uglify from 'gulp-uglify';
 // import named from 'vinyl-named';
@@ -28,6 +28,12 @@ const paths = {
 		dest: 'dist/assets'
 	},
 }
+
+
+export const clean = () => {
+	return del(['dist']);
+}
+
 export const styles = () => {
 	return gulp.src(paths.styles.src)
 		.pipe(gulpif(!PRODUCTION, sourcemaps.init()))
@@ -48,11 +54,17 @@ export const watch = () => {
 	gulp.watch('src/assets/scss/**/*.scss', styles);
 	// gulp.watch('src/assets/js/**/*.js', gulp.series(scripts, reload));
 	// gulp.watch('**/*.php', reload);
-	// gulp.watch(paths.images.src, gulp.series(images, reload));
-	// gulp.watch(paths.other.src, gulp.series(copy, reload));
+	gulp.watch(paths.images.src, images);
+	gulp.watch(paths.other.src, copy);
 } 
 
 export const copy = () => {
 	return gulp.src(paths.other.src)
 		.pipe(gulp.dest(paths.other.dest));
 }
+
+
+export const dev = gulp.series(clean, gulp.parallel(styles, images, copy), watch);
+export const build = gulp.series(clean, gulp.parallel(styles, images, copy));
+
+export default dev;

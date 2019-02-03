@@ -8,8 +8,8 @@
   },
   "scripts": {
     "start": "gulp",
-    "build": "gulp build --prod"
-    // "bundle": "gulp bundle --prod"
+    "build": "gulp build --prod",
+    "bundle": "gulp bundle --prod"
   },
   "repository": {
     "type": "git",

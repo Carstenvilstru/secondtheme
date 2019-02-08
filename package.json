@@ -22,17 +22,22 @@
   },
   "homepage": "https://github.com/Carstenvilstru/secondtheme#readme",
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "babel-loader": "^8.0.5",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "del": "^3.0.0",
     "gulp": "^4.0.0",
     "gulp-clean-css": "^4.0.0",
     "gulp-sass": "^4.0.2",
-    "node-sass": "^4.11.0"
+    "node-sass": "^4.11.0",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1"
   },
   "dependencies": {
     "gulp-if": "^2.0.2",
     "gulp-imagemin": "^5.0.3",
-    "gulp-sourcemaps": "^2.6.4"
+    "gulp-sourcemaps": "^2.6.4",
+    "lodash": "^4.17.11"
   }
 }

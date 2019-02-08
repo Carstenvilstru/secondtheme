@@ -6,7 +6,7 @@ import gulpif from 'gulp-if';
 import sourcemaps from 'gulp-sourcemaps';
 import imagemin from 'gulp-imagemin';
 import del from 'del';
-// import webpack from 'webpack-stream';
+import webpack from 'webpack';
 // import uglify from 'gulp-uglify';
 // import named from 'vinyl-named';
 // import browserSync from 'browser-sync';
@@ -22,6 +22,10 @@ const paths = {
 	images: {
 		src: 'src/assets/images/**/*.{jpg,jpeg,png,svg,gif}',
 		dest: 'dist/assets/images'
+	},
+	scrips: {
+		src: ['src/assets/js/bundle.js','src/assets/js/admin.js'],
+		dest: 'dist/assets/js'
 	},
 	other: {
 		src: ['src/assets/**/*','!src/assets/{images,js,scss}', '!src/assets/{images,js,scss}/**/*'],
@@ -61,6 +65,14 @@ export const watch = () => {
 export const copy = () => {
 	return gulp.src(paths.other.src)
 		.pipe(gulp.dest(paths.other.dest));
+}
+
+export const scripts = () => {
+	return gulp.src(paths.scrips.src)
+	
+	.pipe(webpack())
+		
+	.pipe(gulp.dest(paths.scrips.dest));
 }
 
 

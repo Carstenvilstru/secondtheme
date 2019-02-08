@@ -7,11 +7,9 @@ import sourcemaps from 'gulp-sourcemaps';
 import imagemin from 'gulp-imagemin';
 import del from 'del';
 import webpack from 'webpack-stream';
-// import uglify from 'gulp-uglify';
-// import named from 'vinyl-named';
-// import browserSync from 'browser-sync';
+import uglify from 'gulp-uglify';
+import named from 'vinyl-named';
 
-// const server = browserSync.create();
 const PRODUCTION = yargs.argv.prod;
 
 const paths = {
@@ -30,15 +28,14 @@ const paths = {
 	other: {
 		src: ['src/assets/**/*','!src/assets/{images,js,scss}', '!src/assets/{images,js,scss}/**/*'],
 		dest: 'dist/assets'
-	},
+	}
 }
-
 
 export const clean = () => {
 	return del(['dist']);
 }
 
-export const styles = () => {
+export const styles = (done) => {
 	return gulp.src(paths.styles.src)
 		.pipe(gulpif(!PRODUCTION, sourcemaps.init()))
 		.pipe(sass().on('error',sass.logError))
@@ -46,7 +43,6 @@ export const styles = () => {
 		.pipe(gulpif(!PRODUCTION, sourcemaps.write()))
 		.pipe(gulp.dest(paths.styles.dest));
 }
-
 
 export const images = () => {
 	return gulp.src(paths.images.src)
@@ -56,11 +52,12 @@ export const images = () => {
 
 export const watch = () => {
 	gulp.watch('src/assets/scss/**/*.scss', styles);
-	// gulp.watch('src/assets/js/**/*.js', gulp.series(scripts, reload));
+	gulp.watch('src/assets/js/**/*.js', scripts);
 	// gulp.watch('**/*.php', reload);
 	gulp.watch(paths.images.src, images);
 	gulp.watch(paths.other.src, copy);
 } 
+
 
 export const copy = () => {
 	return gulp.src(paths.other.src)
@@ -69,14 +66,34 @@ export const copy = () => {
 
 export const scripts = () => {
 	return gulp.src(paths.scrips.src)
-	
-	.pipe(webpack())
-		
+	.pipe(named())
+	.pipe(webpack({
+		module: {
+			rules: [
+				{
+					test: /\.js$/,
+					use: {
+						loader: 'babel-loader',
+						options: {
+							presets: ['@babel/preset-env']
+						}
+					}
+				}
+			]
+		},
+		output: {
+			filename: '[name].js'
+		},
+		externals: {
+			jquery: 'jQuery'
+		},
+		devtool: !PRODUCTION ? 'inline-source-map' : false
+	}))
+	.pipe(gulpif(PRODUCTION, uglify()))
 	.pipe(gulp.dest(paths.scrips.dest));
 }
 
-
-export const dev = gulp.series(clean, gulp.parallel(styles, images, copy), watch);
-export const build = gulp.series(clean, gulp.parallel(styles, images, copy));
+export const dev = gulp.series(clean, gulp.parallel(styles, scripts, images, copy),watch);
+export const build = gulp.series(clean, gulp.parallel(styles, scripts, images, copy));
 
 export default dev;

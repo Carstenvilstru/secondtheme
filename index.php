@@ -19,6 +19,7 @@
                             <?php secondtheme_readmore_link(); ?> 
                     <?php } ?>
                     <?php the_posts_pagination( ); ?>
+                    <?php do_action('_themename_after_pagination') ?>
 
                 <?php } else { ?>
                     <p><?php esc_html_e('Sorry, no posts matched your criteria.', 'secondtheme'); ?></p>
